@@ -1,0 +1,56 @@
+plugins {
+    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.21'
+    id 'application'
+    id "org.openjfx.javafxplugin" version "0.0.8"
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+group = 'io.github.deficuet'
+version = '0.0.1'
+mainClassName = "io.github.deficuet.alsd.ALSDApp"
+
+repositories {
+    mavenCentral()
+    maven { url "https://jitpack.io" }
+}
+
+shadowJar {
+    archiveBaseName.set("ALSD")
+    archiveClassifier.set("")
+    archiveVersion.set("0.0.1")
+    zip64 = true
+}
+
+javafx {
+    version = "11.0.2"
+    modules = ["javafx.controls", "javafx.graphics"]
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib"
+    implementation "org.jetbrains.kotlin:kotlin-gradle-plugin"
+    implementation "com.github.Deficuet:UnityKt:v0.0.1-beta.2.3"
+    def gdxVersion = '1.11.0'
+    implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.esotericsoftware.spine:spine-libgdx:3.6.52.1"
+    implementation "no.tornado:tornadofx:1.7.20"
+    implementation "net.mamoe.yamlkt:yamlkt:0.12.0"
+    implementation 'org.json:json:20230227'
+    implementation 'com.github.Deficuet:kotlinTools:0.0.1.1'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = 11
+}
+
+compileTestKotlin {
+    kotlinOptions.jvmTarget = 11
+}
