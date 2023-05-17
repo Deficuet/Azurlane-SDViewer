@@ -18,6 +18,7 @@ import javafx.stage.FileChooser
 import org.json.JSONObject
 import tornadofx.*
 import java.io.File
+import java.io.FileWriter
 import java.nio.file.Files
 import javax.imageio.ImageIO
 
@@ -266,9 +267,9 @@ class BackendFunctions(private val ui: ALSDViewerUI) {
                 println("\u001b[93m${file.fileName} 无可分析动画\u001b[0m")
             }
         }
-        File("$outputPath/${folder.name}.json").writeText(
-            result.toString(4)
-        )
+        FileWriter("$outputPath/${folder.name}.json").use {
+            result.write(it, 4, 0)
+        }
         Platform.runLater {
             ui.analyzeTaskNameStr.value = "当前任务：已完成"
         }
