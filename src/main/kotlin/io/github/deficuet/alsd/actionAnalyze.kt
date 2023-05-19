@@ -2,6 +2,7 @@ package io.github.deficuet.alsd
 
 import com.esotericsoftware.spine.Animation
 import com.esotericsoftware.spine.Animation.EventTimeline
+import org.json.JSONArray
 import tornadofx.*
 
 class ActionTimestamp(
@@ -20,11 +21,12 @@ val ATTACK_ANIMATIONS = listOf(
     "attack", "attack_left", "attack_swim", "attack_swim_left"
 )
 
-fun Animation.analyzeTimeline(): Map<String, Float> {
-    val timeline = timelines.filterIsInstance<EventTimeline>().firstOrNull() ?: return emptyMap()
-    val result = mutableMapOf<String, Float>()
-    for (event in timeline.events) {
-        result[event.data.name] = event.time
-    }
-    return result
+fun Animation.getEvents(): JSONArray {
+    val timeline = timelines.filterIsInstance<EventTimeline>().firstOrNull() ?: return JSONArray()
+    return timeline.events.sortedBy { it.time }.map {
+        json {
+            "name" (it.data.name)
+            "time" (it.time)
+        }
+    }.let { JSONArray(it) }
 }

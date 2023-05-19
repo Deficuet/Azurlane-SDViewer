@@ -13,7 +13,6 @@ class DefaultTextureAtlas(
     override fun findRegion(name: String?): AtlasRegion {
         var region: AtlasRegion? = super.findRegion(name)
         if (region == null) {
-            println(name)
             val file = skeletonFile.sibling("${name}.png")
             if (file.exists()) {
                 val tex = Texture(file).apply {

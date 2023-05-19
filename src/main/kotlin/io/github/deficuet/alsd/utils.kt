@@ -15,8 +15,6 @@ import javafx.application.Platform
 import java.io.File
 import kotlinx.serialization.Serializable
 import net.mamoe.yamlkt.Yaml
-import org.json.JSONArray
-import org.json.JSONObject
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.util.concurrent.FutureTask
@@ -102,24 +100,6 @@ fun BufferedImage.toIndexed(): BufferedImage {
 
 val TrackEntry.isCompleteTwice: Boolean get() {
     return trackTime >= 2 * (animationEnd - animationStart)
-}
-
-fun Map<*, *>.toJSONObject(): JSONObject {
-    return JSONObject().apply {
-        for (entry in this@toJSONObject) {
-            val key = java.lang.String.valueOf(entry.key)
-            val value = entry.value!!
-            if (value::class.java.isArray) {
-                put(key, JSONArray(value))
-                continue
-            }
-            when (value) {
-                is Collection<*> -> put(key, JSONArray(value))
-                is Map<*, *> -> put(key, value.toJSONObject())
-                else -> put(key, value)
-            }
-        }
-    }
 }
 
 fun runAndWaitFX(block: Runnable) {

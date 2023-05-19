@@ -15,6 +15,7 @@ import io.github.deficuet.unitykt.data.*
 import javafx.application.Platform
 import javafx.scene.paint.Color
 import javafx.stage.FileChooser
+import org.json.JSONArray
 import org.json.JSONObject
 import tornadofx.*
 import java.io.File
@@ -208,12 +209,16 @@ class BackendFunctions(private val ui: ALSDViewerUI) {
         for (animationName in ATTACK_ANIMATIONS) {
             val animation: Animation? = skd.findAnimation(animationName)
             if (animation != null) {
-                val result = animation.analyzeTimeline()
+                val result = animation.getEvents()
                 val record = ui.actionTimestampTable.getValue(animationName)
-                val actionDuration = result["action"]
+                val actionDuration = result.filterIsInstance<JSONObject>()
+                    .firstOrNull { it.getString("name") == "action" }
+                    ?.get("time")
                 if (actionDuration != null)
                     record.actionDuration = "%.4f".format(actionDuration)
-                val finishDuration = result["finish"]
+                val finishDuration = result.filterIsInstance<JSONObject>()
+                    .firstOrNull { it.getString("name") == "finish" }
+                    ?.get("time")
                 if (finishDuration != null)
                     record.finishDuration = "%.4f".format(finishDuration)
             }
@@ -249,20 +254,20 @@ class BackendFunctions(private val ui: ALSDViewerUI) {
                     }
                 }
             } ?: continue
-            val animMap = mutableMapOf<String, Map<String, Float>>()
+            val animMap = mutableMapOf<String, JSONArray>()
             for (animName in ATTACK_ANIMATIONS) {
                 val anim = runAndWaitLwjgl(ui.windowApp) {
                     skd.findAnimation(animName)
                 }
                 if (anim != null) {
-                    val resultMap = anim.analyzeTimeline()
-                    if (resultMap.isNotEmpty()) {
+                    val resultMap = anim.getEvents()
+                    if (!resultMap.isEmpty) {
                         animMap[anim.name] = resultMap
                     }
                 }
             }
             if (animMap.isNotEmpty()) {
-                result.put(file.fileName.toString(), animMap.toJSONObject())
+                result.put(file.fileName.toString(), JSONObject(animMap))
             } else {
                 println("\u001b[93m${file.fileName} 无可分析动画\u001b[0m")
             }

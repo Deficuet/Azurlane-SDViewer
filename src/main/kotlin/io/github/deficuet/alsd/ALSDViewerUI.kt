@@ -186,8 +186,8 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
                 marginLeft = 16.0; marginTop = 12.0
             }
             label("翻转：")
-            flipXCheckbox = checkbox("沿X轴")
-            flipYCheckbox = checkbox("沿Y轴") {
+            flipXCheckbox = checkbox("沿纵轴")
+            flipYCheckbox = checkbox("沿横轴") {
                 hboxConstraints { marginLeft = 16.0 }
             }
             isDisable = true
@@ -301,7 +301,7 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
                 marginLeft = 16.0
                 marginRight = 16.0; marginBottom = 16.0
             }
-            label("攻击动作分析：")
+            label("攻击动作事件时间线：")
             tableview(actionTimestampList) {
                 vboxConstraints { marginTop = 12.0 }
                 minWidth = 272.0; maxHeight = 125.0

@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.FloatArray as GdxFloatArray
 import com.esotericsoftware.spine.*
+import com.esotericsoftware.spine.AnimationState.AnimationStateAdapter
 import io.github.deficuet.tools.file.deleteDirectory
 import io.github.deficuet.unitykt.cast
 import javafx.application.Platform
@@ -139,6 +140,13 @@ class ALSDViewerWindow(
                     ui.loopCheckbox.isSelected
                 )
             }
+//            animState.addListener(
+//                object : AnimationStateAdapter() {
+//                    override fun event(entry: AnimationState.TrackEntry?, event: Event?) {
+//                        println("${event?.data?.name} ${event?.time}")
+//                    }
+//                }
+//            )
             if (anims.size > 1) {
                 Platform.runLater {
                     ui.animationList.clear()
