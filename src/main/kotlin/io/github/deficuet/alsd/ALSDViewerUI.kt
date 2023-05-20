@@ -301,7 +301,7 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
                 marginLeft = 16.0
                 marginRight = 16.0; marginBottom = 16.0
             }
-            label("攻击动作事件时间线：")
+            label("攻击动作事件时间轴：")
             tableview(actionTimestampList) {
                 vboxConstraints { marginTop = 12.0 }
                 minWidth = 272.0; maxHeight = 125.0
@@ -319,7 +319,7 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
             hbox {
                 alignment = Pos.CENTER_LEFT
                 vboxConstraints { marginTop = 12.0 }
-                button("批量分析导出") {
+                button("批量导出") {
                     minWidth = 80.0; minHeight = 30.0
                     action {
                         isDisable = true
