@@ -27,7 +27,7 @@
  - 所有任务完成后将恢复窗口至录制前的样子
 
 ### 攻击动作事件时间轴
-![image](https://github.com/Deficuet/Azurlane-SDViewer/assets/36525579/eecf72b9-b119-48f4-9f6f-c9e94e35b154)
+![image](https://github.com/Deficuet/Azurlane-SDViewer/assets/36525579/73da4b39-eb69-485b-9902-b81e0647937d)
 
 在导入文件之后将自动寻找四种列出的攻击动画，如果有就会分析一个动画循环内*第一个*`action`和*第一个*`finish`两个事件的时间点。其中从循环开始至`action`触发时间即为该攻击动画的前摇
 
