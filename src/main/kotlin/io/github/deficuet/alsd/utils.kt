@@ -10,15 +10,20 @@ import com.esotericsoftware.spine.AnimationState
 import com.esotericsoftware.spine.AnimationState.TrackEntry
 import com.esotericsoftware.spine.Skeleton
 import com.esotericsoftware.spine.SkeletonData
-import io.github.deficuet.tools.image.BufferedImage
+import io.github.deficuet.jimage.fancyBufferedImage
 import javafx.application.Platform
 import java.io.File
 import kotlinx.serialization.Serializable
 import net.mamoe.yamlkt.Yaml
 import java.awt.Color
 import java.awt.image.BufferedImage
+import java.nio.file.Files
 import java.util.concurrent.FutureTask
 import javax.imageio.stream.FileImageOutputStream
+import kotlin.io.path.Path
+import kotlin.io.path.deleteExisting
+import kotlin.io.path.isDirectory
+import kotlin.io.path.isRegularFile
 import kotlin.math.ceil
 
 data class SkeletonAtlasInfo(
@@ -93,10 +98,24 @@ class RecordingTask(
 }
 
 fun BufferedImage.toIndexed(): BufferedImage {
-    return BufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED) {
+    return fancyBufferedImage(width, height, BufferedImage.TYPE_BYTE_INDEXED) {
         drawImage(this@toIndexed, 0, 0, Color.WHITE,  null)
     }
 }
+
+fun deleteDirectory(pathString: String) {
+    val path = Path(pathString)
+    Files.newDirectoryStream(path).use { stream ->
+        stream.forEach {
+            when {
+                it.isDirectory() -> deleteDirectory(it.toString())
+                it.isRegularFile() -> it.deleteExisting()
+            }
+        }
+    }
+    path.deleteExisting()
+}
+
 
 val TrackEntry.isCompleteTwice: Boolean get() {
     return trackTime >= 2 * (animationEnd - animationStart)

@@ -17,8 +17,6 @@ import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ScreenViewport
 import com.badlogic.gdx.utils.FloatArray as GdxFloatArray
 import com.esotericsoftware.spine.*
-import com.esotericsoftware.spine.AnimationState.AnimationStateAdapter
-import io.github.deficuet.tools.file.deleteDirectory
 import io.github.deficuet.unitykt.cast
 import javafx.application.Platform
 import net.mamoe.yamlkt.Yaml
@@ -179,7 +177,6 @@ class ALSDViewerWindow(
         }
         batch.begin()
         animGroup.forEach {
-            it.skeleton.setFlip(ui.flipXCheckbox.isSelected, ui.flipYCheckbox.isSelected)
             val delta = if (state == ViewerState.AUTO) {
                 Gdx.graphics.deltaTime
             } else if (state == ViewerState.MEASURING && !it.state.getCurrent(0).isComplete) {

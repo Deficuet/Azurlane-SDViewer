@@ -80,8 +80,6 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
     var taskNameLabel: Label by singleAssign()
     var zoomSlider: Slider by singleAssign()
     var speedSlider: Slider by singleAssign()
-    var flipXCheckbox: CheckBox by singleAssign()
-    var flipYCheckbox: CheckBox by singleAssign()
     var loopCheckbox: CheckBox by singleAssign()
     var animationListView: ListView<String> by singleAssign()
     private var keepOnTopCheckbox: CheckBox by singleAssign()
@@ -176,19 +174,6 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
                 action {
                     speedSlider.value = 1.0
                 }
-            }
-            isDisable = true
-        }.also { controls.add(it) }
-        //endregion
-        //region 镜像翻转
-        hbox {
-            vboxConstraints {
-                marginLeft = 16.0; marginTop = 12.0
-            }
-            label("翻转：")
-            flipXCheckbox = checkbox("沿纵轴")
-            flipYCheckbox = checkbox("沿横轴") {
-                hboxConstraints { marginLeft = 16.0 }
             }
             isDisable = true
         }.also { controls.add(it) }

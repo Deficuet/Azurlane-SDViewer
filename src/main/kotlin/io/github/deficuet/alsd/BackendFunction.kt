@@ -9,7 +9,7 @@ import com.badlogic.gdx.graphics.glutils.FrameBuffer
 import com.esotericsoftware.spine.Animation
 import com.esotericsoftware.spine.SkeletonBinary
 import com.esotericsoftware.spine.SkeletonJson
-import io.github.deficuet.tools.image.flipY
+import io.github.deficuet.jimage.flipY
 import io.github.deficuet.unitykt.*
 import io.github.deficuet.unitykt.data.*
 import javafx.application.Platform
