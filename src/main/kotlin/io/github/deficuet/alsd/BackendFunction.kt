@@ -45,25 +45,25 @@ class BackendFunctions(private val ui: ALSDViewerUI) {
             }
             val skData = bundleContext.objectList.firstObjectOf<AssetBundle>()
                 .mContainer[0].second.asset.getObjAs<MonoBehaviour>().typeTreeJson!!
-            val skObj = bundleContext.objects.getAs<TextAsset>(
+            val skObj = bundleContext.objectMap.getAs<TextAsset>(
                 skData.getJSONObject("skeletonJSON").getLong("m_PathID")
             )
             val skFile = File("$folderPath/${skObj.mName}").apply {
                 writeBytes(skObj.mScript)
             }
-            val atlasData = bundleContext.objects.getAs<MonoBehaviour>(
+            val atlasData = bundleContext.objectMap.getAs<MonoBehaviour>(
                 skData.getJSONArray("atlasAssets")[0].cast<JSONObject>().getLong("m_PathID")
             ).typeTreeJson!!
-            val atlasObj = bundleContext.objects.getAs<TextAsset>(
+            val atlasObj = bundleContext.objectMap.getAs<TextAsset>(
                 atlasData.getJSONObject("atlasFile").getLong("m_PathID")
             )
             val atlasFile = File("$folderPath/${atlasObj.mName}").apply {
                 writeBytes(atlasObj.mScript)
             }
-            val material = bundleContext.objects.getAs<Material>(
+            val material = bundleContext.objectMap.getAs<Material>(
                 atlasData.getJSONArray("materials")[0].cast<JSONObject>().getLong("m_PathID")
             )
-            val tex = material.mSavedProperties.mTexEnvs[0].second.mTexture.getObj()?.cast<Texture2D>()
+            val tex = material.mSavedProperties.mTexEnvs[0].second.mTexture.safeGetObjAs<Texture2D>()
             if (tex != null) {
                 ImageIO.write(
                     tex.image.flipY(), "png",

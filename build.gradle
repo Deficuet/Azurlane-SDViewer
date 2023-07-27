@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'io.github.deficuet'
-version = '0.0.2'
+version = '0.0.3'
 mainClassName = "io.github.deficuet.alsd.ALSDApp"
 
 repositories {
@@ -23,7 +23,7 @@ repositories {
 shadowJar {
     archiveBaseName.set("ALSD")
     archiveClassifier.set("")
-    archiveVersion.set("0.0.2")
+    archiveVersion.set("0.0.3")
     zip64 = true
 }
 
@@ -33,7 +33,7 @@ javafx {
 }
 
 dependencies {
-    implementation "com.github.Deficuet:UnityKt:v0.0.1-beta.2.3"
+    implementation "com.github.Deficuet:UnityKt:v0.0.1-beta.3.1"
     def gdxVersion = '1.11.0'
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
