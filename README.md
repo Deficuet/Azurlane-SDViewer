@@ -1,5 +1,8 @@
 # 碧蓝航线 SD小人动画浏览器
 浏览、录制碧蓝航线SD小人的动画以及分析攻击动作前摇
+
+**<i>Issues and PRs in English are also welcome.</i>**
+
 ## 运行要求
  - JDK 11
  - JavaFX SDK. Releases压缩包里自带一套JavaFX组件，获取自官网
