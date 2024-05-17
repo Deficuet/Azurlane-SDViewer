@@ -11,7 +11,9 @@ import com.esotericsoftware.spine.SkeletonBinary
 import com.esotericsoftware.spine.SkeletonJson
 import io.github.deficuet.jimage.flipY
 import io.github.deficuet.unitykt.*
-import io.github.deficuet.unitykt.data.*
+import io.github.deficuet.unitykt.classes.*
+import io.github.deficuet.unitykt.pptr.getAs
+import io.github.deficuet.unitykt.pptr.safeGetAs
 import javafx.application.Platform
 import javafx.scene.paint.Color
 import javafx.stage.FileChooser
@@ -38,13 +40,13 @@ class BackendFunctions(private val ui: ALSDViewerUI) {
     }
 
     private fun extractFromFile(file: File): SkeletonAtlasInfo {
-        return UnityAssetManager().use { manager ->
+        return UnityAssetManager.new().use { manager ->
             val bundleContext = manager.loadFile(file.absolutePath)
             val folderPath = "$cachePath/${file.nameWithoutExtension}".also {
                 File(it).apply { mkdir() }
             }
             val skData = bundleContext.objectList.firstObjectOf<AssetBundle>()
-                .mContainer[0].second.asset.getObjAs<MonoBehaviour>().typeTreeJson!!
+                .mContainer.values.first()[0].asset.getAs<MonoBehaviour>().toTypeTreeJson()!!
             val skObj = bundleContext.objectMap.getAs<TextAsset>(
                 skData.getJSONObject("skeletonJSON").getLong("m_PathID")
             )
@@ -53,7 +55,7 @@ class BackendFunctions(private val ui: ALSDViewerUI) {
             }
             val atlasData = bundleContext.objectMap.getAs<MonoBehaviour>(
                 skData.getJSONArray("atlasAssets")[0].cast<JSONObject>().getLong("m_PathID")
-            ).typeTreeJson!!
+            ).toTypeTreeJson()!!
             val atlasObj = bundleContext.objectMap.getAs<TextAsset>(
                 atlasData.getJSONObject("atlasFile").getLong("m_PathID")
             )
@@ -63,10 +65,10 @@ class BackendFunctions(private val ui: ALSDViewerUI) {
             val material = bundleContext.objectMap.getAs<Material>(
                 atlasData.getJSONArray("materials")[0].cast<JSONObject>().getLong("m_PathID")
             )
-            val tex = material.mSavedProperties.mTexEnvs[0].second.mTexture.safeGetObjAs<Texture2D>()
+            val tex = material.mSavedProperties.mTexEnvs.values.first()[0].mTexture.safeGetAs<Texture2D>()
             if (tex != null) {
                 ImageIO.write(
-                    tex.image.flipY(), "png",
+                    tex.getImage()!!.flipY().apply(true), "png",
                     File("$folderPath/${tex.mName}.png")
                 )
             }

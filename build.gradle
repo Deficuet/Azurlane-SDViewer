@@ -1,13 +1,15 @@
 plugins {
-    id 'org.jetbrains.kotlin.jvm' version '1.7.21'
-    id 'org.jetbrains.kotlin.plugin.serialization' version '1.7.21'
+    id "java"
     id 'application'
-    id "org.openjfx.javafxplugin" version "0.0.8"
-    id 'com.github.johnrengelman.shadow' version '7.1.2'
+    id 'org.jetbrains.kotlin.jvm' version '1.8.21'
+    id 'org.jetbrains.kotlin.plugin.serialization' version '1.8.21'
+    id "org.openjfx.javafxplugin" version "0.0.12"
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
+def progVersion = "0.0.4_alpha.1"
 group = 'io.github.deficuet'
-version = '0.0.3'
+version = progVersion
 mainClassName = "io.github.deficuet.alsd.ALSDApp"
 
 repositories {
@@ -23,26 +25,26 @@ repositories {
 shadowJar {
     archiveBaseName.set("ALSD")
     archiveClassifier.set("")
-    archiveVersion.set("0.0.3")
+    archiveVersion.set(progVersion)
     zip64 = true
 }
 
 javafx {
-    version = "11.0.2"
+    version = "17.0.11"
     modules = ["javafx.controls", "javafx.graphics"]
 }
 
 dependencies {
-    implementation "com.github.Deficuet:UnityKt:v0.0.1-beta.3.1"
-    def gdxVersion = '1.11.0'
+    implementation "com.github.Deficuet:UnityKt:0.1.0_alpha.13"
+    def gdxVersion = '1.12.1'
     implementation "com.badlogicgames.gdx:gdx:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-lwjgl:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     implementation "com.esotericsoftware.spine:spine-libgdx:3.8.99.1"
     implementation "no.tornado:tornadofx:1.7.20"
-    implementation "net.mamoe.yamlkt:yamlkt:0.12.0"
-    implementation 'org.json:json:20230227'
-    implementation 'com.github.Deficuet:JImageUtils:0.0.2'
+    implementation "net.mamoe.yamlkt:yamlkt:0.13.0"
+    implementation 'org.json:json:20231013'
+    implementation 'com.github.Deficuet:JImageUtils:0.0.6'
     testImplementation 'org.jetbrains.kotlin:kotlin-test'
 }
 
