@@ -15,7 +15,6 @@ import com.badlogic.gdx.math.Interpolation.linear
 import com.badlogic.gdx.math.MathUtils
 import com.badlogic.gdx.scenes.scene2d.Stage
 import com.badlogic.gdx.utils.viewport.ScreenViewport
-import com.badlogic.gdx.utils.FloatArray as GdxFloatArray
 import com.esotericsoftware.spine.*
 import io.github.deficuet.unitykt.cast
 import javafx.application.Platform
@@ -24,6 +23,7 @@ import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import javax.imageio.ImageIO
 import kotlin.math.sign
+import com.badlogic.gdx.utils.FloatArray as GdxFloatArray
 
 enum class ViewerState {
     AUTO,

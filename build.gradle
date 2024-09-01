@@ -7,7 +7,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-def progVersion = "0.0.4_alpha.1"
+def progVersion = "0.0.5"
 group = 'io.github.deficuet'
 version = progVersion
 mainClassName = "io.github.deficuet.alsd.ALSDApp"

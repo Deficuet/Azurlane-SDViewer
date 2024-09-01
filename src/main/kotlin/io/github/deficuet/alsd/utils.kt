@@ -11,12 +11,18 @@ import com.esotericsoftware.spine.AnimationState.TrackEntry
 import com.esotericsoftware.spine.Skeleton
 import com.esotericsoftware.spine.SkeletonData
 import io.github.deficuet.jimage.fancyBufferedImage
+import io.github.deficuet.unitykt.UnityAssetManager
+import io.github.deficuet.unitykt.classes.AssetBundle
+import io.github.deficuet.unitykt.classes.MonoBehaviour
+import io.github.deficuet.unitykt.firstObjectOf
+import io.github.deficuet.unitykt.pptr.getAs
 import javafx.application.Platform
-import java.io.File
 import kotlinx.serialization.Serializable
 import net.mamoe.yamlkt.Yaml
+import tornadofx.*
 import java.awt.Color
 import java.awt.image.BufferedImage
+import java.io.File
 import java.nio.file.Files
 import java.util.concurrent.FutureTask
 import javax.imageio.stream.FileImageOutputStream
@@ -25,6 +31,7 @@ import kotlin.io.path.deleteExisting
 import kotlin.io.path.isDirectory
 import kotlin.io.path.isRegularFile
 import kotlin.math.ceil
+import javafx.scene.paint.Color as ColorFX
 
 data class SkeletonAtlasInfo(
     val skeletonFile: FileHandle,
@@ -121,21 +128,22 @@ val TrackEntry.isCompleteTwice: Boolean get() {
     return trackTime >= 2 * (animationEnd - animationStart)
 }
 
-fun runAndWaitFX(block: Runnable) {
-    try {
+fun <P: View, T> runBlockingFX(gui: P, task: P.() -> T): T? {
+    return try {
         if (Platform.isFxApplicationThread()) {
-            block.run()
+            gui.task()
         } else {
-            val task = FutureTask<Unit>(block, null)
-            Platform.runLater(task)
-            task.get()
+            val future = FutureTask { gui.task() }
+            Platform.runLater(future)
+            future.get()
         }
     } catch (e: Exception) {
         e.printStackTrace()
+        null
     }
 }
 
-fun <T> runAndWaitLwjgl(app: LwjglApplication, block: () -> T): T? {
+fun <T> runBlockingLwjgl(app: LwjglApplication, block: () -> T): T? {
     return try {
         val task = FutureTask(block)
         app.postRunnable(task)
@@ -148,14 +156,11 @@ fun <T> runAndWaitLwjgl(app: LwjglApplication, block: () -> T): T? {
 
 @Serializable
 data class Configurations(
-    var importFilesPath: String
+    var assetSystemRoot: String = "",
+    var importFilesPath: String = ""
 )
 
-val defaultConfig by lazy {
-    Configurations(
-        importFilesPath = "C:/Users"
-    )
-}
+val defaultConfig by lazy { Configurations() }
 
 val cacheFolder = File("./cache")
 val cachePath: String by lazy { cacheFolder.absoluteFile.canonicalPath }
@@ -173,3 +178,28 @@ val configs = if (configFile.exists()) {
     )
     defaultConfig
 }
+
+fun File.withDefaultPath(defaultPath: String = "C:/Users"): File {
+    return if (exists() && isDirectory) this else File(defaultPath)
+}
+
+val dependencies: Map<String, List<String>> by lazy {
+    UnityAssetManager.new().use { manager ->
+        val depContext = manager.loadFile(Path(configs.assetSystemRoot).resolve("dependencies"))
+        val bundle = depContext.objectList.firstObjectOf<AssetBundle>()
+        val mono = bundle.mContainer.values.first()[0].asset.getAs<MonoBehaviour>()
+        mono.toTypeTreeJson()!!.let { json ->
+            val keys = json.getJSONArray("m_Keys")
+            val values = json.getJSONArray("m_Values")
+            val table = mutableMapOf<String, List<String>>()
+            for (i in 0 until keys.length()) {
+                val key = keys.getString(i)
+                val value = values.getJSONObject(i).getJSONArray("m_Dependencies").map { it.toString() }
+                table[key] = value
+            }
+            table
+        }
+    }
+}
+
+val errorTextFill: ColorFX = ColorFX.rgb(187, 0, 17)
