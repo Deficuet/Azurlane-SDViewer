@@ -7,7 +7,7 @@ plugins {
     id 'com.github.johnrengelman.shadow' version '8.1.1'
 }
 
-def progVersion = "0.0.5"
+def progVersion = "0.0.7"
 group = 'io.github.deficuet'
 version = progVersion
 mainClassName = "io.github.deficuet.alsd.ALSDApp"
@@ -64,9 +64,9 @@ test {
 }
 
 compileKotlin {
-    kotlinOptions.jvmTarget = 11
+    kotlinOptions.jvmTarget = 17
 }
 
 compileTestKotlin {
-    kotlinOptions.jvmTarget = 11
+    kotlinOptions.jvmTarget = 17
 }

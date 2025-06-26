@@ -25,10 +25,7 @@ import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Path
 import javax.imageio.ImageIO
-import kotlin.io.path.Path
-import kotlin.io.path.exists
-import kotlin.io.path.name
-import kotlin.io.path.pathString
+import kotlin.io.path.*
 import javafx.scene.paint.Color as ColorFX
 
 class Functions(private val ui: ALSDViewerUI) {
@@ -39,12 +36,24 @@ class Functions(private val ui: ALSDViewerUI) {
                 FileChooser.ExtensionFilter("All types", "*.*")
             ), File(configs.importFilesPath)
                 .withDefaultPath(Path(configs.assetSystemRoot).resolve("char").pathString)
-                .withDefaultPath()
+                .withDefaultPath(),
+            owner = ui.primaryStage
         )
         if (files.isEmpty()) return null
         val file = files[0]
         configs.importFilesPath = file.parent
         return file
+    }
+
+    fun importFolder(): File? {
+        ui.lastSelection = ""
+        val folder = chooseDirectory(
+            "选择文件夹", File(configs.importFilesPath)
+                .withDefaultPath(),
+            owner = ui.primaryStage
+        ) ?: return null
+        configs.importFilesPath = folder.parent
+        return folder
     }
 
     private fun extractFromFile(file: File, dependencies: Array<Path>): SkeletonAtlasInfo {
@@ -164,12 +173,70 @@ class Functions(private val ui: ALSDViewerUI) {
             taskNameLabel.textFill = ColorFX.BLACK
             taskNameStr.value = "加载中：${file.nameWithoutExtension}"
         }
-
         val newInfo = extractFromFile(file, dependenciesTable.values.toTypedArray())
         runBlockingFX(ui) {
             fileName = file.nameWithoutExtension
             animationList.clear()
             taskNameStr.value = "当前任务：${file.nameWithoutExtension}"
+            controls.forEach { it.isDisable = false }
+        }
+        with(ui.window) {
+            skeletonInfo.clear()
+            skeletonInfo.add(newInfo)
+            resetCamera()
+            runBlockingLwjgl(ui.windowApp) {
+                loadSkeleton()
+                runBlockingFX(ui) {
+                    actionTimestampList.forEach {
+                        it.actionDuration = "N/A"
+                        it.finishDuration = "N/A"
+                    }
+                    analyzeAttack()
+                }
+            }
+        }
+    }
+
+    private fun extractFromFolder(folder: File): SkeletonAtlasInfo? {
+        val fileList = folder.listFiles()!!
+        val atlasFile = fileList.firstOrNull { it.extension == "atlas" }
+        if (atlasFile == null) {
+            runBlockingFX(ui) {
+                taskNameLabel.textFill = errorTextFill
+                taskNameStr.value = "找不到.atlas文件"
+            }
+            return null
+        }
+        val skelFile = fileList.firstOrNull { it.extension == "skel" }
+        if (skelFile == null) {
+            runBlockingFX(ui) {
+                taskNameLabel.textFill = errorTextFill
+                taskNameStr.value = "找不到.skel文件"
+            }
+            return null
+        }
+        if (fileList.firstOrNull { it.extension == "png" } == null) {
+            runBlockingFX(ui) {
+                taskNameLabel.textFill = errorTextFill
+                taskNameStr.value = "找不到.png文件"
+            }
+            return null
+        }
+        return SkeletonAtlasInfo(FileHandle(skelFile), FileHandle(atlasFile), 0.2f)
+    }
+
+    fun loadFolder(folder: File) {
+        runBlockingFX(ui) {
+            controls.forEach { it.isDisable = true }
+            dependenciesList.clear()
+            taskNameLabel.textFill = ColorFX.BLACK
+            taskNameStr.value = "加载中：${folder.name}"
+        }
+        val newInfo = extractFromFolder(folder) ?: return
+        runBlockingFX(ui) {
+            fileName = folder.name
+            animationList.clear()
+            taskNameStr.value = "当前任务：${folder.name}"
             controls.forEach { it.isDisable = false }
         }
         with(ui.window) {

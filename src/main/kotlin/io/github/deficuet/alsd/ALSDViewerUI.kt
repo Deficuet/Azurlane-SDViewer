@@ -134,20 +134,40 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
             //region 导入文件
             hbox {
                 alignment = Pos.CENTER_LEFT
-                button("导入文件") {
-                    minWidth = 80.0; minHeight = 30.0
-                    action {
-                        isDisable = true
-                        primaryStage.isAlwaysOnTop = false
-                        val f = functions.importFile()
-                        primaryStage.isAlwaysOnTop = keepOnTopCheckbox.isSelected
-                        if (f != null) {
-                            runAsync {
-                                functions.loadFile(f)
+                vbox {
+                    button("导入文件") {
+                        minWidth = 80.0; minHeight = 20.0
+                        action {
+                            isDisable = true
+                            primaryStage.isAlwaysOnTop = false
+                            val f = functions.importFile()
+                            primaryStage.isAlwaysOnTop = keepOnTopCheckbox.isSelected
+                            if (f != null) {
+                                runAsync {
+                                    functions.loadFile(f)
+                                    isDisable = false
+                                }
+                            } else {
                                 isDisable = false
                             }
-                        } else {
-                            isDisable = false
+                        }
+                    }
+                    button("导入文件夹") {
+                        minWidth = 80.0; minHeight = 15.0
+                        vboxConstraints { marginTop = 8.0 }
+                        action {
+                            isDisable = true
+                            primaryStage.isAlwaysOnTop = false
+                            val f = functions.importFolder()
+                            primaryStage.isAlwaysOnTop = keepOnTopCheckbox.isSelected
+                            if (f != null) {
+                                runAsync {
+                                    functions.loadFolder(f)
+                                    isDisable = false
+                                }
+                            } else {
+                                isDisable = false
+                            }
                         }
                     }
                 }
