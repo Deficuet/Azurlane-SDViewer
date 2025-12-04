@@ -93,12 +93,11 @@ class ALSDViewerUI: View("碧蓝SD小人浏览器") {
     var animationListView: ListView<String> by singleAssign()
     private var keepOnTopCheckbox: CheckBox by singleAssign()
 
-    val actionTimestampTable = mapOf(
-        "attack" to ActionTimestamp("attack"),
-        "attack_left" to ActionTimestamp("attack_left"),
-        "attack_swim" to ActionTimestamp("attack_swim"),
-        "attack_swim_left" to ActionTimestamp("attack_swim_left")
-    )
+    val actionTimestampTable = buildMap {
+        for (animName in ATTACK_ANIMATIONS) {
+            put(animName, ActionTimestamp(animName))
+        }
+    }
 
     val actionTimestampList: ObservableList<ActionTimestamp> =
         FXCollections.observableArrayList(actionTimestampTable.values)
