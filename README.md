@@ -4,18 +4,29 @@
 **<i>Issues and PRs in English are also welcome.</i>**
 
 ## 运行要求
- - JDK 11
+ - JDK 17
  - JavaFX SDK. Releases压缩包里自带一套JavaFX组件，获取自官网
 
 解压后双击`launch.bat`即可。运行后会出现一个黑console终端以及一左一右两个窗口
 
 一并打包了JavaFX和Lwjgl框架所以十分的大，当然也可以自己构建
 ## 使用
-### 动画浏览
-![image](https://github.com/Deficuet/Azurlane-SDViewer/assets/36525579/56cf562f-3b67-41d4-aa42-9ebae1c86a5b)
+<img width="468" height="219" alt="image" src="https://github.com/user-attachments/assets/dc15c225-9ee0-4b1a-af65-6074d4ea4090" />
 
+### 素材文件根目录
+将`.../Android/data/com.bilibili.azurlane/files/AssetBundles/`文件夹下的内容复制到电脑上。`素材文件根目录`就是指向这整个AssetBundles文件夹的路径。该文件夹用于处理所有依赖文件，避免出现无法加载的情况（如确捷的SD小人）
+
+### 导入文件
 点击`导入文件`后会自动加载并将SD小人显示在右侧窗口中。需要的文件位于游戏目录下`AssetBundles/char`，该文件夹存放所有SD小人的文件
- - **目前不支持查看 确捷 默认立绘 的小人，因为材质图片文件与模型不在同一个文件里，目前尚无解决办法，欢迎PR**
+ - 已支持加载确捷的SD小人
+
+如果直接加载AssetBundle文件出错，可以使用备用的加载文件夹的方法：
+ 1. 使用其他能正常打开AssetBundle的工具，如[AssetStudio](https://github.com/Perfare/AssetStudio)，打开`AssetBundles/char`文件夹下的文件
+ 2. 找到并提取三个Object：两个`TextAsset`，后缀分别为`.skel`和`.atlas`；以及一个`Texture2D`，存有拆分好的SD小人的各个部件
+ 3. 提取三个Object至一个文件夹下，加载这个文件夹
+
+### 动画浏览
+<img width="468" height="627" alt="image" src="https://github.com/user-attachments/assets/b0e509bd-4f7f-4bb7-bb15-fb0d687d3e4e" />
 
 之后将会在动画列表内显示所有可用的动画，单击即可切换动画。加载完成后默认使用第一个动画
 ### 动画录制保存
